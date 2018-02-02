@@ -1,0 +1,109 @@
+<html>
+<head>
+<style>.s {font-size: x-small;}</style>
+<script>
+calc = function() {
+  n = document.getElementById('t').value.split("\n");
+  p = [];
+  s = [];
+  for (var i = 0; i < n.length; i++) {
+    t = n[i].trim().replace(/\t/g," ").split(" ");
+    if (t[0].length > 0 & t[0]!="missing") {
+      p.push(t[0]);
+      s.push(parseFloat(t[1]));
+    }
+  }
+  if (p.length % 2 == 1) {
+    p.push("missing");
+    s.push(-2.999);
+  }
+
+  t = best_binary(s).toString(2).split("").reverse().join("") + "000000000000000000";
+
+  a = [];
+  b = [];
+  for (i = 0; i < p.length; i++) {
+    if(t[i]=="0"){
+      a.push(p[i] + "\t" + s[i] + "\tA\t" + (1+a.length).toString() );
+    }else{
+      b.push(p[i] + "\t" + s[i] + "\tB\t" + (1+b.length).toString() );
+    }
+  }
+  document.getElementById('t').value = a.join("\n") + "\n\n" + b.join("\n");
+}
+
+best_binary = function(s) { // s is the vector of scores
+  v = [0]; // vector of possible team weights
+  y = [0]; // vector of possible sum(huber(weights)) .. huber function is L2 < 1 and L1 > 1
+  n = [0]; // vector of players on side A
+
+// compute totals
+  t = 0; // later will search n = u/2, v ~ t/2 , y ~ x/2
+  x = 0;
+  for (j = 0; j < s.length; j++) {
+    t += s[j];
+    x += Math.abs(s[j])*Math.min(Math.abs(s[j]),1);
+  }
+
+// compute vectors v , y , n - they double in length at each iteration
+  for (j = 0; j < s.length - 1; j++) {
+    m = v.length;
+    w = s[j];
+    z = Math.abs(s[j])*Math.min(Math.abs(s[j]),1);
+    for (i = 0; i < m; i++) {
+      v.push(v[i] + w);
+      y.push(y[i] + z);
+      n.push(n[i] + 1);
+    }
+  }
+
+// search "best" value b at index j
+  j = -1;
+  b = 99999;
+  m = v.length;
+  u = s.length / 2;
+  t = t / 2;
+  x = x / 2;
+  for (i = 0; i < m; i++) {
+    if (n[i] == u) {
+      if (Math.abs(v[i] - t) + 0.1 * Math.abs(y[i] - x) < b) {
+        b = Math.abs(v[i] - t) + 0.1 * Math.abs(y[i] - x);
+        j = i;
+      }
+    }
+  }
+  return (j);
+}
+</script>
+</head>
+<body>
+<b>Available</b>
+<br><span class="s">space or tab delimited</span><br/>
+<textarea id="t" rows="25" cols="45">Oscar	2.474
+Alfie	0.696
+PhilH	0.611
+DanB	0.505
+Jeremey	0.471
+WillB	0.371
+HenryV	0.167
+TomWr	0
+Andrew	0
+Juanfra	0
+Steve	0
+Duncan	0
+Damian	0
+JonL	0
+Andy	0
+ChrisB	0
+ChrisWr	0
+Micky	0
+DanH	0
+MattC	-0.068
+Craig	-0.217
+David	-0.353
+MikeH	-0.378
+TomWi	-2.753</textarea>
+<br/>
+<button onclick="calc()">re-calc A/B</button>
+</body>
+</html>
