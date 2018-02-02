@@ -34,7 +34,7 @@ calc = function() {
 
 best_binary = function(s) { // s is the vector of scores
   v = [0]; // vector of possible team weights
-  y = [0]; // vector of possible sum(huber(weights)) .. huber function is L2 < 1 and L1 > 1
+  y = [0]; // vector of possible sum(huber(weights)) .. huber function is x^2/2 , |x| < 1 and |x|-0.5 , |x| > 1
   n = [0]; // vector of players on side A
 
 // compute totals
@@ -42,14 +42,22 @@ best_binary = function(s) { // s is the vector of scores
   x = 0;
   for (j = 0; j < s.length; j++) {
     t += s[j];
-    x += Math.abs(s[j])*Math.min(Math.abs(s[j]),1);
+    if(Math.abs(s[j]) < 1){
+      x += s[j]*s[j]/2;
+    }else{
+      x+= Math.abs(s[j])-0.5;
+    }
   }
 
 // compute vectors v , y , n - they double in length at each iteration
   for (j = 0; j < s.length - 1; j++) {
     m = v.length;
     w = s[j];
-    z = Math.abs(s[j])*Math.min(Math.abs(s[j]),1);
+    if(Math.abs(s[j]) < 1){
+      z = s[j]*s[j]/2;
+    }else{
+      z = Math.abs(s[j])-0.5;
+    }
     for (i = 0; i < m; i++) {
       v.push(v[i] + w);
       y.push(y[i] + z);
