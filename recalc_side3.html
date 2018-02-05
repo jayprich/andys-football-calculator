@@ -15,7 +15,7 @@ calc = function() {
   }
   if (p.length % 2 == 1) {
     p.push("missing");
-    s.push(-2.999);
+    s.push(-0.7221);
   }
 
   t = best_binary(s).toString(2).split("").reverse().join("") + "000000000000000000";
@@ -24,9 +24,9 @@ calc = function() {
   b = [];
   for (i = 0; i < p.length; i++) {
     if(t[i]=="0"){
-      a.push(p[i] + "\t" + s[i] + "\tA\t" + (1+a.length).toString() );
+      a.push(p[i] + "\t" + s[i].toFixed(4) + "\tA\t" + (1+a.length).toString() );
     }else{
-      b.push(p[i] + "\t" + s[i] + "\tB\t" + (1+b.length).toString() );
+      b.push(p[i] + "\t" + s[i].toFixed(4) + "\tB\t" + (1+b.length).toString() );
     }
   }
   document.getElementById('t').value = a.join("\n") + "\n\n" + b.join("\n");
@@ -87,30 +87,30 @@ best_binary = function(s) { // s is the vector of scores
 <body>
 <b>Available</b>
 <br><span class="s">space or tab delimited</span><br/>
-<textarea id="t" rows="25" cols="45">Oscar	2.474
-Alfie	0.696
-PhilH	0.611
-DanB	0.505
-Jeremey	0.471
-WillB	0.371
-HenryV	0.167
-TomWr	0
-Andrew	0
-Juanfra	0
-Steve	0
-Duncan	0
-Damian	0
-JonL	0
-Andy	0
-ChrisB	0
-ChrisWr	0
-Micky	0
-DanH	0
-MattC	-0.068
-Craig	-0.217
-David	-0.353
-MikeH	-0.378
-TomWi	-2.753</textarea>
+<textarea id="t" rows="25" cols="45">Oscar	1.7976
+HenryV	0.9920
+Alfie	0.9549
+Jeremey	0.9540
+PhilH	0.8646
+Dan-B	0.8547
+WillB	0.6353
+TomWr	0.5646
+Steve	0.3434
+Andrew	0.2929
+Juanfra	0.2586
+Craig	0.1811
+Dan-H	0.1758 ?
+ChrisWr	0.1632 ?
+Damian	0.1569
+Micky	0.1487
+MikeH	0.0681
+David	0.0470
+ChrisB	-0.0003
+Jon-L	-0.0538
+Duncan	-0.0446
+AndyN	-0.0559
+MattC	-0.5867
+TomWi	-1.6436</textarea>
 <br/>
 <button onclick="calc()">re-calc A/B</button>
 </body>
